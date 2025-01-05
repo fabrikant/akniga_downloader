@@ -3,3 +3,5 @@
 opf.py
 tg_sender.py
 
+geckodriver.log
+__pycache__

@@ -14,12 +14,16 @@ from bs4 import BeautifulSoup
 import urllib.parse
 from Crypto.Cipher import AES
 import gzip
-import time
 from fake_useragent import UserAgent
+from tg_sender import send_to_telegram
 
 logger = logging.getLogger(__name__)
 
+REQUEST_BOOK_INFO_PATTERN = "/ajax/b/"
+REQUEST_BOOK_M3U8_PATTERN = "m3u8"
 
+
+# Возвращает заготовку заголовков для запросов
 def get_headers():
     ua = UserAgent()
     agent = ua.firefox
@@ -28,10 +32,23 @@ def get_headers():
     }
 
 
+# Путь к файлу с обложкой
+def get_cover_filename(dir_path):
+    return dir_path / "cover.jpg"
+
+
+# Путь к файлу с полной неразделенной на главы
+# книгой
+def full_book_tmp_filename(dir_path):
+    return dir_path / "full_book.mp3"
+
+
+# Возвращает строку с общими параметрами ffmpeg, которые используются
+# во всех командах
 def ffmpeg_common_command():
     ffmpeg_log_level = "fatal"
     if logger.root.level == logging.DEBUG:
-        ffmpeg_log_level = "‘debug"
+        ffmpeg_log_level = "debug"
     elif logger.root.level == logging.INFO:
         ffmpeg_log_level = "info"
     elif logger.root.level == logging.WARNING:
@@ -41,107 +58,14 @@ def ffmpeg_common_command():
     return ["ffmpeg", "-y", "-hide_banner", "-loglevel", ffmpeg_log_level]
 
 
-def get_cover_filename(dir_path):
-    return dir_path / "cover.jpg"
-
-
-def download_cover(book_json, book_soup, tmp_folder):
-    cover_url = book_json["preview"]
-    cover_filename = get_cover_filename(tmp_folder)
-    cover_tmp_filename = tmp_folder / "cover_tmp.jpg"
-    big_picture_url = book_soup.find("link", {"rel": "preload", "as": "image"})["href"]
-    # try to download big picture
-    res = requests.get(big_picture_url, stream=True, headers=get_headers())
-    if res.status_code == 200:
-        res.raw.decode_content = True
-        with open(cover_tmp_filename, "wb") as f:
-            shutil.copyfileobj(res.raw, f)
-
-    else:
-        # big picture not found, try to download preview
-        res = requests.get(cover_url, stream=True, headers=get_headers())
-        if res.status_code == 200:
-            res.raw.decode_content = True
-            with open(cover_tmp_filename, "wb") as f:
-                shutil.copyfileobj(res.raw, f)
-
-    command = ffmpeg_common_command() + ["-i", cover_tmp_filename, cover_filename]
-    subprocess.run(command)
-    os.remove(cover_tmp_filename)
-    return cover_filename
-
-
-def find_mp3_url(book_soup):
-    url_mp3 = None
-    logger.debug("try to parse html")
-    attr_name = "src"
-    for audio_tag in book_soup.findAll("audio"):
-        if "src" in audio_tag.attrs:
-            url_mp3 = audio_tag.attrs[attr_name]
-            logger.warning(f"find mp3 url: {url_mp3}")
-            break
-    return url_mp3
-
-
-def get_firefox_driver():
-    executable_path = GeckoDriverManager().install()
-    options = webdriver.FirefoxOptions()
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--single-process")
-    options.add_argument("--disable-dev-shm-usage")
-    service = firefox_service(executable_path=executable_path)
-    return webdriver.Firefox(service=service, options=options)
-
-
-def get_book_requests(book_url):
-    logger.warning("Getting book requests. Please wait...")
-    current_webdriver = get_firefox_driver()
-    with current_webdriver as driver:
-        driver.implicitly_wait(40)
-        driver.get(book_url)
-        time.sleep(30)
-        book_requests = driver.requests
-        html = driver.page_source
-        driver.close()
-        return book_requests, html
-
-
-def analyse_book_requests(book_requests):
-    logger.debug("Analysing book requests...")
-    try:
-        # find request with book json data
-        book_json_requests = [
-            r
-            for r in book_requests
-            if r.method == "POST" and r.path.startswith("/ajax/b/")
-        ]
-        # assert that we have only 1 request for book data found
-        assert len(book_json_requests) == 1, "Error: Book data not found. Exiting."
-        logger.warning("Book data found")
-
-        # book_json = json.loads(brotli.decompress(book_json_requests[0].response.body))
-        resp_body = book_json_requests[0].response.body
-        book_json = json.loads(gzip.decompress(resp_body).decode("utf-8"))
-        # find request with m3u8 file
-        m3u8_file_requests = [r for r in book_requests if "m3u8" in r.url]
-        m3u8url = None
-        if len(m3u8_file_requests) == 1:
-            logger.warning("m3u8 file found")
-            m3u8url = m3u8_file_requests[0].url
-        else:
-            logger.warning("m3u8 file NOT found")
-        return book_json, m3u8url
-    except AssertionError as message:
-        logger.error(message)
-        exit(0)
-
-
+# Отрезает от большого файла кусок со временем начала и оеончания
+# Делит большой файл на главы. Файл создается без метаданных,
+# так как ffmpeg не хочет делать это за один проход
 def cut_the_chapter(chapter, input_file, output_folder):
     output_file = output_folder / sanitize_filename(f'no_meta_{chapter["title"]}.mp3')
     logger.debug(
-        f'cut the chapter {chapter["title"]} from file {input_file} time from '
-        f'start {str(chapter["time_from_start"])} time finish {str(chapter["time_finish"])}'
+        f'нарезка главы {chapter["title"]} файла {input_file} время '
+        f'начала {str(chapter["time_from_start"])} время окончания {str(chapter["time_finish"])}'
     )
     command_cut = ffmpeg_common_command() + [
         "-i",
@@ -158,12 +82,13 @@ def cut_the_chapter(chapter, input_file, output_folder):
     return output_file
 
 
+# Добавляются метаданные в mp3 файл
 def create_mp3_with_metadata(
     chapter, no_meta_filename, book_folder, tmp_folder, book_json
 ):
     cover_filename = get_cover_filename(tmp_folder)
     chapter_path = book_folder / sanitize_filename(f'{chapter["title"]}.mp3')
-    logger.debug(f"create mp3 with metadata: {chapter_path}")
+    logger.debug(f"Создание метаданных для главы: {chapter_path}")
     command_metadata = ffmpeg_common_command() + ["-i", no_meta_filename]
     book_performer = ""
     if "sTextPerformer" in book_json.keys():
@@ -219,6 +144,64 @@ def create_mp3_with_metadata(
     os.remove(no_meta_filename)
 
 
+# Загрузка обложки. Сначала стараемся загрузить файл побольше,
+# ели не находим берем со страницы
+# После загрузки по файлу нужно пройтись ffmpeg и сконвертировать
+# в jpeg, так как исходный формат может быть очень разным
+def download_cover(book_json, book_soup, tmp_folder):
+    cover_url = book_json["preview"]
+    cover_filename = get_cover_filename(tmp_folder)
+    cover_tmp_filename = tmp_folder / "cover_tmp.jpg"
+    big_picture_url = book_soup.find("link", {"rel": "preload", "as": "image"})["href"]
+    # try to download big picture
+    res = requests.get(big_picture_url, stream=True, headers=get_headers())
+    if res.ok:
+        res.raw.decode_content = True
+        with open(cover_tmp_filename, "wb") as f:
+            shutil.copyfileobj(res.raw, f)
+
+    else:
+        # big picture not found, try to download preview
+        res = requests.get(cover_url, stream=True, headers=get_headers())
+        if res.ok:
+            res.raw.decode_content = True
+            with open(cover_tmp_filename, "wb") as f:
+                shutil.copyfileobj(res.raw, f)
+
+    command = ffmpeg_common_command() + ["-i", cover_tmp_filename, cover_filename]
+    subprocess.run(command)
+    os.remove(cover_tmp_filename)
+    return cover_filename
+
+
+# Открываем в браузере страницу с книгой
+def get_book_requests(book_url):
+    logger.warning("Старт получения данных о книге")
+
+    executable_path = GeckoDriverManager().install()
+    options = webdriver.FirefoxOptions()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--single-process")
+    options.add_argument("--disable-dev-shm-usage")
+    service = firefox_service(executable_path=executable_path)
+    current_webdriver = webdriver.Firefox(service=service, options=options)
+
+    with current_webdriver as driver:
+        driver.implicitly_wait(30)
+        driver.get(book_url)
+        driver.wait_for_request(REQUEST_BOOK_INFO_PATTERN, 30)
+        driver.wait_for_request(REQUEST_BOOK_M3U8_PATTERN, 30)
+        book_requests = driver.requests
+        html = driver.page_source
+        driver.close()
+        return book_requests, html
+
+
+# akniga предоставляет медиа в разных форматах. Некоторые страницы
+# могут содержать список воспроизведения - файл m3u8.
+# Но иногда (редко) список mp3 файлов.
+# Это второй случай
 def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
     mp3_filename = mp3_url.split("/")[-1]
     url_pattern_path = "{0}/".format("/".join(mp3_url.split("/")[0:-1]))
@@ -242,14 +225,16 @@ def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
             url_string = url_pattern_path + urllib.parse.quote(
                 str_count + url_pattern_filename
             )
-            logger.debug("try to download file: " + url_string)
+            logger.debug("Начало загрузки файла: " + url_string)
             res = requests.get(url_string, stream=True, headers=get_headers())
-            if res.status_code == 200:
+            if res.ok:
                 with open(filename, "wb") as f:
                     shutil.copyfileobj(res.raw, f)
-                logger.warning(f"file has been downloaded and saved as: {filename}")
+                logger.warning(f"Файл загружен и сохранен как: {filename}")
             else:
-                logger.error(f"code: {res.status_code} while downloading: {url_string}")
+                logger.error(
+                    f"Получен код ошибки: {res.status_code} при загрузке с url: {url_string}"
+                )
                 exit(0)
         no_meta_filename = cut_the_chapter(chapter, filename, tmp_folder)
         create_mp3_with_metadata(
@@ -257,10 +242,8 @@ def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
         )
 
 
-def full_book_tmp_filename(tmp_folder):
-    return tmp_folder / "full_book.mp3"
-
-
+# После загрузки книги, нужно разделить файл на главы
+# и снабдить метаданными
 def post_processing(book_folder, tmp_folder, book_json):
     chapter_count = 0
     # separate audio file into chapters
@@ -277,6 +260,9 @@ def post_processing(book_folder, tmp_folder, book_json):
         )
 
 
+# Загрузка книги по плэйлисту с помощью программы ffmpeg
+# на выходе получаем один большой файл в неизвестном
+# (необязательно mp3) формате
 def download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_json):
     ffmpeg_command = ffmpeg_common_command() + [
         "-i",
@@ -287,6 +273,7 @@ def download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_js
     post_processing(book_folder, tmp_folder, book_json)
 
 
+# Создаем рабочие директории
 def create_work_dirs(output_folder, book_json, book_soup, book_url):
 
     # sanitize (make valid) book title
@@ -320,9 +307,21 @@ def create_work_dirs(output_folder, book_json, book_soup, book_url):
     return book_folder, tmp_folder
 
 
+# Пытаемся найти на странице ссылки на mp3 файлы
+def find_mp3_url(book_soup):
+    url_mp3 = None
+    attr_name = "src"
+    for audio_tag in book_soup.findAll("audio"):
+        if "src" in audio_tag.attrs:
+            url_mp3 = audio_tag.attrs[attr_name]
+            break
+    return url_mp3
+
+
+# Загрузка книги
 def download_book(book_url, output_folder):
 
-    logger.debug(f"start downloading book: {book_url}")
+    logger.debug(f"Начало загрузки книги с url: {book_url}")
     # create output folder
     Path(output_folder).mkdir(exist_ok=True)
 
@@ -340,23 +339,60 @@ def download_book(book_url, output_folder):
         # try to parse html
         mp3_url = find_mp3_url(book_soup)
         if mp3_url is None:
-            logger.error("mp3 url not found")
+            logger.error(
+                "Не удалось обнаружить ни файл m3u8, ни файл mp3. Загрузка прервана"
+            )
             exit(0)
         else:
             download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json)
     else:  # it's ordinary case
         download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_json)
 
-    logger.warning(f"The book has been downloaded: {book_folder}")
-    # remove full book folder
+    logger.warning(f"Книга успешна загружена в каталог: {book_folder}")
+    # Копируем обложку к основным файлам
+    shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
+    # Удаляем каталог временных файлов
     shutil.rmtree(tmp_folder, ignore_errors=True)
     return book_folder
 
 
+# Обработка данных со страницы с книгой
+def analyse_book_requests(book_requests):
+    try:
+        # find request with book json data
+        book_json_requests = [
+            r
+            for r in book_requests
+            if r.method == "POST" and r.path.startswith(REQUEST_BOOK_INFO_PATTERN)
+        ]
+        # assert that we have only 1 request for book data found
+        assert len(book_json_requests) == 1, "Error: Book data not found. Exiting."
+        logger.warning("Информация о книге получена")
+
+        # book_json = json.loads(brotli.decompress(book_json_requests[0].response.body))
+        resp_body = book_json_requests[0].response.body
+        book_json = json.loads(gzip.decompress(resp_body).decode("utf-8"))
+        # find request with m3u8 file
+        m3u8_file_requests = [
+            r for r in book_requests if REQUEST_BOOK_M3U8_PATTERN in r.url
+        ]
+        m3u8url = None
+        if len(m3u8_file_requests) == 1:
+            logger.info("Файл m3u8 найден")
+            m3u8url = m3u8_file_requests[0].url
+        else:
+            logger.warning("Файл m3u8 не найден")
+        return book_json, m3u8url
+    except AssertionError as message:
+        logger.error(message)
+        exit(0)
+
+
+# Обработка серии и последовательный запуск книг из серии
 def parse_series(series_url, output_folder):
-    logger.warning("the series has been discovered")
+    logger.warning("Получение информации о серии")
     res = requests.get(series_url, headers=get_headers())
-    if res.status_code == 200:
+    if res.ok:
         series_soup = BeautifulSoup(res.text, "html.parser")
         bs_links_soup = series_soup.find(
             "div", {"class": "content__main__articles"}
@@ -364,13 +400,16 @@ def parse_series(series_url, output_folder):
         for bs_link_soup in bs_links_soup:
             download_book(bs_link_soup["href"], output_folder)
     else:
-        logger.error(f"code: {res.status_code} while downloading: {series_url}")
+        logger.error(
+            f"Получен код ошибки: {res.status_code} при загрузке с url: {series_url}"
+        )
 
 
+# Точка входа в программу
 if __name__ == "__main__":
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.WARNING,
+        level=logging.INFO,
     )
     parser = argparse.ArgumentParser(description="Загрузчик книг с сайта akniga.org")
     parser.add_argument(
