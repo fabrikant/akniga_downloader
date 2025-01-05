@@ -16,6 +16,8 @@ from Crypto.Cipher import AES
 import gzip
 from fake_useragent import UserAgent
 from tg_sender import send_to_telegram
+from opf import book_info_to_xml
+from book_metadata import get_book_info
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +54,8 @@ def ffmpeg_common_command():
     elif logger.root.level == logging.INFO:
         ffmpeg_log_level = "info"
     elif logger.root.level == logging.WARNING:
-        ffmpeg_log_level = "warning"
+        # ffmpeg_log_level = "warning"
+        ffmpeg_log_level = "info"
     elif logger.root.level == logging.ERROR:
         ffmpeg_log_level = "error"
     return ["ffmpeg", "-y", "-hide_banner", "-loglevel", ffmpeg_log_level]
@@ -330,12 +333,18 @@ def find_mp3_url(book_soup):
     return url_mp3
 
 
+def create_metadata_file(book_folder, book_url):
+    filename = Path(book_folder) / "metadata.opf"
+    logger.warning(f"Создание файла с метаданными книги {filename}")
+    book_info = get_book_info(book_url)
+    xml = book_info_to_xml(book_info)
+    Path(filename).write_text(xml)
+
+
 # Загрузка книги
 def download_book(book_url, output_folder):
 
     logger.warning(f"Начало загрузки книги с url: {book_url}")
-    # create output folder
-    Path(output_folder).mkdir(exist_ok=True)
 
     book_requests, book_html = get_book_requests(book_url)
     book_json, m3u8_url = analyse_book_requests(book_requests)
@@ -361,8 +370,11 @@ def download_book(book_url, output_folder):
         download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_json)
 
     logger.warning(f"Книга успешна загружена в каталог: {book_folder}")
+
     # Копируем обложку к основным файлам
     shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
+    # Создание файла метаданных
+    create_metadata_file(book_folder, book_url)
     # Удаляем каталог временных файлов
     shutil.rmtree(tmp_folder, ignore_errors=True)
     return book_folder
