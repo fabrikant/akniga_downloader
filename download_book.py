@@ -63,7 +63,7 @@ def ffmpeg_common_command():
 # так как ffmpeg не хочет делать это за один проход
 def cut_the_chapter(chapter, input_file, output_folder):
     output_file = output_folder / sanitize_filename(f'no_meta_{chapter["title"]}.mp3')
-    logger.debug(
+    logger.warning(
         f'нарезка главы {chapter["title"]} файла {input_file} время '
         f'начала {str(chapter["time_from_start"])} время окончания {str(chapter["time_finish"])}'
     )
@@ -88,7 +88,7 @@ def create_mp3_with_metadata(
 ):
     cover_filename = get_cover_filename(tmp_folder)
     chapter_path = book_folder / sanitize_filename(f'{chapter["title"]}.mp3')
-    logger.debug(f"Создание метаданных для главы: {chapter_path}")
+    logger.warning(f"Создание метаданных для главы: {chapter_path}")
     command_metadata = ffmpeg_common_command() + ["-i", no_meta_filename]
     book_performer = ""
     if "sTextPerformer" in book_json.keys():
@@ -225,7 +225,7 @@ def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
             url_string = url_pattern_path + urllib.parse.quote(
                 str_count + url_pattern_filename
             )
-            logger.debug("Начало загрузки файла: " + url_string)
+            logger.warning("Начало загрузки файла: " + url_string)
             res = requests.get(url_string, stream=True, headers=get_headers())
             if res.ok:
                 with open(filename, "wb") as f:
@@ -276,10 +276,22 @@ def download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_js
 # Создаем рабочие директории
 def create_work_dirs(output_folder, book_json, book_soup, book_url):
 
+    book_json["narrator"] = ""
+    bs_narrator = book_soup.find("a", {"rel": "performer"})
+    if bs_narrator != None:
+        bs_narrator = bs_narrator.find("span")
+        if bs_narrator != None:
+            book_json["narrator"] = sanitize_filename(bs_narrator.get_text())
+
+    if book_json["narrator"] == "":
+        book_dir_name = book_json["titleonly"]
+    else:
+        book_dir_name = f"{book_json["titleonly"]} - читает {book_json["narrator"]}"
+
     # sanitize (make valid) book title
     book_json["titleonly"] = sanitize_filename(book_json["titleonly"])
     book_json["author"] = sanitize_filename(book_json["author"])
-    book_folder = Path(output_folder) / book_json["author"] / book_json["titleonly"]
+    book_folder = Path(output_folder) / book_json["author"] / book_dir_name
 
     bs_series = book_soup.findAll(
         "div", {"class": "caption__article--about-block about--series"}
@@ -294,7 +306,7 @@ def create_work_dirs(output_folder, book_json, book_soup, book_url):
                     Path(output_folder)
                     / book_json["author"]
                     / book_json["series_name"]
-                    / f"{book_json['series_number']} {book_json['titleonly']}"
+                    / f"{book_json['series_number']} - {book_dir_name}"
                 )
 
     # create new folder with book title
@@ -321,7 +333,7 @@ def find_mp3_url(book_soup):
 # Загрузка книги
 def download_book(book_url, output_folder):
 
-    logger.debug(f"Начало загрузки книги с url: {book_url}")
+    logger.warning(f"Начало загрузки книги с url: {book_url}")
     # create output folder
     Path(output_folder).mkdir(exist_ok=True)
 
@@ -378,7 +390,7 @@ def analyse_book_requests(book_requests):
         ]
         m3u8url = None
         if len(m3u8_file_requests) == 1:
-            logger.info("Файл m3u8 найден")
+            logger.warning("Файл m3u8 найден")
             m3u8url = m3u8_file_requests[0].url
         else:
             logger.warning("Файл m3u8 не найден")
@@ -409,7 +421,7 @@ def parse_series(series_url, output_folder):
 if __name__ == "__main__":
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.INFO,
+        level=logging.WARNING,
     )
     parser = argparse.ArgumentParser(description="Загрузчик книг с сайта akniga.org")
     parser.add_argument(
@@ -425,7 +437,7 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output", help="Путь к папке загрузки")
     parser.add_argument("--url", help="Адрес (url) страницы с книгой или серией книг")
     args = parser.parse_args()
-    logger.info(args)
+    logger.warning(args)
     if "/series/" in args.url:
         parse_series(args.url, args.output)
     else:

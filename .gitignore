@@ -2,6 +2,6 @@
 .venv
 opf.py
 tg_sender.py
-
+book.json
 geckodriver.log
 __pycache__
