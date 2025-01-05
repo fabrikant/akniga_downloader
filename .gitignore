@@ -1,4 +1,5 @@
-node_modules/
-audiobooks/
-temp/
-books.txt
+.vscode
+.venv
+opf.py
+tg_sender.py
+

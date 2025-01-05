@@ -1,0 +1,317 @@
+1736083562267	geckodriver	INFO	Listening on 127.0.0.1:56145
+1736083562788	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "51263" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile4lHISO"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736083563746	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736083564031	Marionette	INFO	Listening on port 39173
+WebDriver BiDi listening on ws://127.0.0.1:51263
+Read port: 39173
+1736083564261	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:37275","sslProxy":"127.0.0.1:37275"}
+1736083564261	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+1736083602281	Marionette	INFO	Stopped listening on port 39173
+JavaScript warning: https://akniga.org/application/tmp/templates/cache/acl/40133452b0a8fea8484962494a9c11b3.js?v=6, line 1466: Script terminated by timeout at:
+76/e._onSBUpdateEnd@https://akniga.org/application/tmp/templates/cache/acl/40133452b0a8fea8484962494a9c11b3.js?v=6:1466:241973
+
+console.error: services.settings: 
+  Message: NetworkError: Network error: TypeError: NetworkError: Network request failed
+  Stack:
+    APIError@resource://services-settings/RemoteSettingsClient.sys.mjs:107:1
+NetworkError@resource://services-settings/RemoteSettingsClient.sys.mjs:111:5
+_adjustedError@resource://services-settings/RemoteSettingsClient.sys.mjs:919:14
+maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:824:38
+
+console.warn: services.settings: main/search-config-v2 sync interrupted by shutdown
+console.warn: services.settings: main/translations-wasm sync interrupted by shutdown
+console.warn: services.settings: main/sites-classification sync interrupted by shutdown
+console.warn: services.settings: main/anti-tracking-url-decoration sync interrupted by shutdown
+console.warn: services.settings: main/public-suffix-list sync interrupted by shutdown
+console.warn: services.settings: main/hijack-blocklists sync interrupted by shutdown
+console.error: (new AbortError("IndexedDB: main/rally-studies-v1 getLastModified() IndexedDB:  execute() A request was aborted, for example through a call to IDBTransaction.abort.", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736083886269	geckodriver	INFO	Listening on 127.0.0.1:36291
+1736083886787	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "37867" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileVFuBel"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736083887491	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736083887820	Marionette	INFO	Listening on port 46509
+WebDriver BiDi listening on ws://127.0.0.1:37867
+Read port: 46509
+1736083888044	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:36557","sslProxy":"127.0.0.1:36557"}
+1736083888044	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=dbxcdfcetn&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119771432546207577&uniq=8582364454068767150&user=8582364454068767150&siteid=72057610773882020%2C216959289%2C18119771432546207577&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+1736083923212	Marionette	INFO	Stopped listening on port 46509
+console.error: services.settings: 
+Object
+  - prototype Object
+    - columnNumber = 0
+    - data = null
+    - filename = resource://gre/modules/ServiceRequest.sys.mjs
+    - lineNumber = 127
+    - location = {"name":"open","filename":"resource://gre/modules/ServiceRequest.sys.mjs","sourceId":24,"lineNumber":127,"columnNumber":11,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/Utils.sys.mjs","name":"fetch/<","sourceId":23,"lineNumber":268,"columnNumber":15,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/Utils.sys.mjs","name":"fetch","sourceId":23,"lineNumber":219,"columnNumber":12,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/RemoteSettingsClient.sys.mjs","name":"_validateCollectionSignature","sourceId":21,"lineNumber":1012,"columnNumber":47,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/RemoteSettingsClient.sys.mjs","name":"maybeSync","sourceId":21,"lineNumber":729,"columnNumber":26,"asyncCause":null,"asyncCaller":null,"caller":null,"formattedStack":"maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26\n","nativeSavedFrame":{}},"formattedStack":"_validateCollectionSignature@resource://services-settings/RemoteSettingsClient.sys.mjs:1012:47\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26\n","nativeSavedFrame":{}},"formattedStack":"fetch@resource://services-settings/Utils.sys.mjs:219:12\n_validateCollectionSignature@resource://services-settings/RemoteSettingsClient.sys.mjs:1012:47\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26\n","nativeSavedFrame":{}},"formattedStack":"fetch/<@resource://services-settings/Utils.sys.mjs:268:15\nfetch@resource://services-settings/Utils.sys.mjs:219:12\n_validateCollectionSignature@resource://services-settings/RemoteSettingsClient.sys.mjs:1012:47\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26\n","nativeSavedFrame":{}},"formattedStack":"open@resource://gre/modules/ServiceRequest.sys.mjs:127:11\nfetch/<@resource://services-settings/Utils.sys.mjs:268:15\nfetch@resource://services-settings/Utils.sys.mjs:219:12\n_validateCollectionSignature@resource://services-settings/RemoteSettingsClient.sys.mjs:1012:47\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26\n","nativeSavedFrame":{}}
+    - message = 
+    - name = 
+    - result = 2152071198
+    - stack = open@resource://gre/modules/ServiceRequest.sys.mjs:127:11|fetch/<@resource://services-settings/Utils.sys.mjs:268:15|fetch@resource://services-settings/Utils.sys.mjs:219:12|_validateCollectionSignature@resource://services-settings/RemoteSettingsClient.sys.mjs:1012:47|maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:729:26|
+  - prototype Object
+console.warn: services.settings: main/websites-with-shared-credential-backends sync interrupted by shutdown
+console.warn: services.settings: main/password-rules sync interrupted by shutdown
+console.warn: services.settings: main/translations-models sync interrupted by shutdown
+console.warn: services.settings: main/search-categorization sync interrupted by shutdown
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.warn: services.settings: main/devtools-compatibility-browsers sync interrupted by shutdown
+console.warn: services.settings: main/search-config-v2 sync interrupted by shutdown
+console.warn: services.settings: main/translations-wasm sync interrupted by shutdown
+console.warn: services.settings: main/sites-classification sync interrupted by shutdown
+console.warn: services.settings: main/anti-tracking-url-decoration sync interrupted by shutdown
+console.error: (new AbortError("IndexedDB: main/public-suffix-list getLastModified() IndexedDB:  execute() A request was aborted, for example through a call to IDBTransaction.abort.", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736083958393	geckodriver	INFO	Listening on 127.0.0.1:55967
+1736083958912	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "35037" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile7qk5J2"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736083959608	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736083959874	Marionette	INFO	Listening on port 35043
+WebDriver BiDi listening on ws://127.0.0.1:35037
+Read port: 35043
+1736083960068	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:40291","sslProxy":"127.0.0.1:40291"}
+1736083960068	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+1736083995937	Marionette	INFO	Stopped listening on port 35043
+JavaScript warning: https://akniga.org/application/tmp/templates/cache/acl/40133452b0a8fea8484962494a9c11b3.js?v=6, line 1466: Script terminated by timeout at:
+76/e.tick@https://akniga.org/application/tmp/templates/cache/acl/40133452b0a8fea8484962494a9c11b3.js?v=6:1466:130260
+
+console.error: services.settings: 
+  Message: NetworkError: Network error: TypeError: NetworkError: Network request failed
+  Stack:
+    APIError@resource://services-settings/RemoteSettingsClient.sys.mjs:107:1
+NetworkError@resource://services-settings/RemoteSettingsClient.sys.mjs:111:5
+_adjustedError@resource://services-settings/RemoteSettingsClient.sys.mjs:919:14
+maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:824:38
+
+console.warn: services.settings: main/url-parser-default-unknown-schemes-interventions sync interrupted by shutdown
+console.warn: services.settings: main/websites-with-shared-credential-backends sync interrupted by shutdown
+console.warn: services.settings: main/password-rules sync interrupted by shutdown
+console.warn: services.settings: main/translations-models sync interrupted by shutdown
+console.warn: services.settings: main/search-categorization sync interrupted by shutdown
+console.error: (new Error("IndexedDB: main/fxrelay-allowlist getLastModified() IndexedDB:  execute() The application is shutting down", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736084098091	geckodriver	INFO	Listening on 127.0.0.1:41721
+1736084098623	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "43533" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileeykUmo"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736084099458	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736084099707	Marionette	INFO	Listening on port 36447
+WebDriver BiDi listening on ws://127.0.0.1:43533
+Read port: 36447
+1736084099803	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:35281","sslProxy":"127.0.0.1:35281"}
+1736084099803	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=bumjhmxtfwiwn&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119827327292355922&uniq=7302351702757091776&user=7302351702757091776&siteid=72057610773882020%2C216959289%2C18119827327292355922&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+1736084137319	Marionette	INFO	Stopped listening on port 36447
+console.error: services.settings: 
+Object
+  - prototype Object
+    - columnNumber = 0
+    - data = null
+    - filename = resource://gre/modules/ServiceRequest.sys.mjs
+    - lineNumber = 127
+    - location = {"name":"open","filename":"resource://gre/modules/ServiceRequest.sys.mjs","sourceId":24,"lineNumber":127,"columnNumber":11,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/Utils.sys.mjs","name":"fetch/<","sourceId":23,"lineNumber":268,"columnNumber":15,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/Utils.sys.mjs","name":"fetch","sourceId":23,"lineNumber":219,"columnNumber":12,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-common/kinto-http-client.sys.mjs","name":"timedFetch/<","sourceId":465,"lineNumber":569,"columnNumber":12,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-common/kinto-http-client.sys.mjs","name":"timedFetch","sourceId":465,"lineNumber":544,"columnNumber":12,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-common/kinto-http-client.sys.mjs","name":"request","sourceId":465,"lineNumber":634,"columnNumber":33,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-common/kinto-http-client.sys.mjs","name":"execute","sourceId":465,"lineNumber":2643,"columnNumber":36,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-common/kinto-http-client.sys.mjs","name":"getData","sourceId":465,"lineNumber":1119,"columnNumber":40,"asyncCause":null,"asyncCaller":null,"caller":{"filename":"resource://services-settings/RemoteSettingsClient.sys.mjs","name":"maybeSync","sourceId":21,"lineNumber":719,"columnNumber":54,"asyncCause":null,"asyncCaller":null,"caller":null,"formattedStack":"maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"getData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"execute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"request@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"timedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12\nrequest@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"timedFetch/<@resource://services-common/kinto-http-client.sys.mjs:569:12\ntimedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12\nrequest@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"fetch@resource://services-settings/Utils.sys.mjs:219:12\ntimedFetch/<@resource://services-common/kinto-http-client.sys.mjs:569:12\ntimedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12\nrequest@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"fetch/<@resource://services-settings/Utils.sys.mjs:268:15\nfetch@resource://services-settings/Utils.sys.mjs:219:12\ntimedFetch/<@resource://services-common/kinto-http-client.sys.mjs:569:12\ntimedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12\nrequest@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}},"formattedStack":"open@resource://gre/modules/ServiceRequest.sys.mjs:127:11\nfetch/<@resource://services-settings/Utils.sys.mjs:268:15\nfetch@resource://services-settings/Utils.sys.mjs:219:12\ntimedFetch/<@resource://services-common/kinto-http-client.sys.mjs:569:12\ntimedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12\nrequest@resource://services-common/kinto-http-client.sys.mjs:634:33\nexecute@resource://services-common/kinto-http-client.sys.mjs:2643:36\ngetData@resource://services-common/kinto-http-client.sys.mjs:1119:40\nmaybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54\n","nativeSavedFrame":{}}
+    - message = 
+    - name = 
+    - result = 2152071198
+    - stack = open@resource://gre/modules/ServiceRequest.sys.mjs:127:11|fetch/<@resource://services-settings/Utils.sys.mjs:268:15|fetch@resource://services-settings/Utils.sys.mjs:219:12|timedFetch/<@resource://services-common/kinto-http-client.sys.mjs:569:12|timedFetch@resource://services-common/kinto-http-client.sys.mjs:544:12|request@resource://services-common/kinto-http-client.sys.mjs:634:33|execute@resource://services-common/kinto-http-client.sys.mjs:2643:36|getData@resource://services-common/kinto-http-client.sys.mjs:1119:40|maybeSync@resource://services-settings/RemoteSettingsClient.sys.mjs:719:54|
+  - prototype Object
+console.warn: services.settings: main/translations-models sync interrupted by shutdown
+console.warn: services.settings: main/search-categorization sync interrupted by shutdown
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.error: (new Error("IndexedDB: main/devtools-compatibility-browsers getLastModified() IndexedDB:  execute() The application is shutting down", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736084172995	geckodriver	INFO	Listening on 127.0.0.1:45361
+1736084173519	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "37943" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileczzUBN"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736084174607	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736084174851	Marionette	INFO	Listening on port 34731
+WebDriver BiDi listening on ws://127.0.0.1:37943
+Read port: 34731
+1736084175171	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:34035","sslProxy":"127.0.0.1:34035"}
+1736084175171	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=bbbpyvzlpwhve&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119847082360910867&uniq=15845361517515485732&user=15845361517515485732&siteid=72057610773882020%2C216959289%2C18119847082360910867&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=boggrxcp&host=verify.yandex.ru%2Fverify_adserving&session=72057610759975391%2C216816703%2C18119847115511378963&campaign=1087785325&siteid=72057610759975391%2C216816703%2C18119847115511378963&uniq=15845361517515485732&ad=16722047455, line 1: TypeError: location.ancestorOrigins is undefined
+1736084212600	Marionette	INFO	Stopped listening on port 34731
+JavaScript warning: https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js, line 13: Script terminated by timeout at:
+b.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:8219
+c.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:14:28037
+b.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:8379
+c.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:14:28037
+b.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:8379
+c.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:14:28037
+b.draw@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:8379
+b.update@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:14512
+b.handleEvent@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:13:14830
+b._dispatchEvent@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:4075
+b._dispatchEvent@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:4158
+b.dispatchEvent@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:3479
+a._tick@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:7459
+a._handleTimeout@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:6772
+
+console.warn: services.settings: main/search-categorization sync interrupted by shutdown
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.warn: services.settings: main/devtools-compatibility-browsers sync interrupted by shutdown
+console.error: (new AbortError("IndexedDB: main/tracking-protection-lists-ios getLastModified() IndexedDB:  execute() A request was aborted, for example through a call to IDBTransaction.abort.", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736084230934	geckodriver	INFO	Listening on 127.0.0.1:58691
+1736084231461	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "49767" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileDmkcwg"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736084232664	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736084232967	Marionette	INFO	Listening on port 45557
+Read port: 45557
+WebDriver BiDi listening on ws://127.0.0.1:49767
+1736084233064	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:46471","sslProxy":"127.0.0.1:46471"}
+1736084233064	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=ezpiielnqlsja&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119862428635052567&uniq=1606196173386650861&user=1606196173386650861&siteid=72057610773882020%2C216959289%2C18119862428635052567&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=bslsdmjtk&host=verify.yandex.ru%2Fverify_adserving&session=72057610759975391%2C216816703%2C18119862567729445369&campaign=1087785325&siteid=72057610759975391%2C216816703%2C18119862567729445369&uniq=1606196173386650861&ad=16722047455, line 1: TypeError: location.ancestorOrigins is undefined
+1736084271400	Marionette	INFO	Stopped listening on port 45557
+JavaScript warning: https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js, line 12: Script terminated by timeout at:
+a._handleTimeout@https://storage.mds.yandex.net/get-bstor/13014838/7d334d21-15c4-4bd9-acd8-8f760e7dd9d0.js:12:6739
+
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.warn: services.settings: main/devtools-compatibility-browsers sync interrupted by shutdown
+console.warn: services.settings: main/search-config-v2 sync interrupted by shutdown
+console.warn: services.settings: main/translations-wasm sync interrupted by shutdown
+console.warn: services.settings: main/sites-classification sync interrupted by shutdown
+console.warn: services.settings: main/anti-tracking-url-decoration sync interrupted by shutdown
+console.error: (new AbortError("IndexedDB: main/personality-provider-recipe getLastModified() IndexedDB:  execute() A request was aborted, for example through a call to IDBTransaction.abort.", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736084415976	geckodriver	INFO	Listening on 127.0.0.1:59111
+1736084416496	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "33047" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofile7vMg8C"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736084417302	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736084417582	Marionette	INFO	Listening on port 42607
+Read port: 42607
+WebDriver BiDi listening on ws://127.0.0.1:33047
+1736084417690	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:41713","sslProxy":"127.0.0.1:41713"}
+1736084417691	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=ufhthwkbso&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119910548115292450&uniq=11159800484952123173&user=11159800484952123173&siteid=72057610773882020%2C216959289%2C18119910548115292450&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+1736084454926	Marionette	INFO	Stopped listening on port 42607
+JavaScript warning: https://yandex.ru/ads/system/context.js, line 2: Script terminated by timeout at:
+23873/t.protect/<@https://yandex.ru/ads/system/context.js:2:136626
+
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.warn: services.settings: main/devtools-compatibility-browsers sync interrupted by shutdown
+console.warn: services.settings: main/search-config-v2 sync interrupted by shutdown
+console.warn: services.settings: main/translations-wasm sync interrupted by shutdown
+console.warn: services.settings: main/sites-classification sync interrupted by shutdown
+console.warn: services.settings: main/anti-tracking-url-decoration sync interrupted by shutdown
+console.error: (new AbortError("IndexedDB: main/cfr-srg getLastModified() IndexedDB:  execute() A request was aborted, for example through a call to IDBTransaction.abort.", "resource://services-settings/IDBHelpers.sys.mjs", 16))
+1736084558597	geckodriver	INFO	Listening on 127.0.0.1:43623
+1736084559116	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/usr ... ge" "--remote-debugging-port" "46483" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilebqbpJO"
+*** You are running in headless mode.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1736084559630	Marionette	INFO	Marionette enabled
+console.error: "Warning: unrecognized command line flag" "-no-sandbox"
+console.error: "Warning: unrecognized command line flag" "-disable-dev-shm-usage"
+1736084559838	Marionette	INFO	Listening on port 39211
+WebDriver BiDi listening on ws://127.0.0.1:46483
+Read port: 39211
+1736084560023	RemoteAgent	INFO	Proxy settings initialized: {"proxyType":"manual","httpProxy":"127.0.0.1:41431","sslProxy":"127.0.0.1:41431"}
+1736084560023	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+JavaScript error: https://yastatic.net/pcode-static/measurers/126/adserving/adserving-display-uv.js?slot=dkynrybwbjv&host=verify.yandex.ru%2Fverify_adserving&session=72057610773882020%2C216959289%2C18119947371831704132&uniq=5204423397311980651&user=5204423397311980651&siteid=72057610773882020%2C216959289%2C18119947371831704132&ad=16735954084&campaign=1087907569, line 1: TypeError: location.ancestorOrigins is undefined
+1736084595507	Marionette	INFO	Stopped listening on port 39211
+console.warn: services.settings: main/password-rules sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/translations-models sync interrupted by shutdown
+console.warn: services.settings: main/search-categorization sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/search-telemetry-v2 sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/devtools-compatibility-browsers sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/search-config-v2 sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/translations-wasm sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/sites-classification sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/anti-tracking-url-decoration sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/public-suffix-list sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/hijack-blocklists sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/doh-providers sync interrupted by shutdown
+console.warn: services.settings: main/doh-config sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/devtools-devices sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/language-dictionaries sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/password-recipes sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/fxmonitor-breaches sync interrupted by shutdown
+console.warn: services.settings: main/addons-manager-settings sync interrupted by shutdown
+console.warn: services.settings: main/query-stripping sync interrupted by shutdown
+console.warn: services.settings: main/partitioning-exempt-urls sync interrupted by shutdown
+console.error: "Could not download new icon" ({})
+console.warn: services.settings: main/search-config-overrides-v2 sync interrupted by shutdown
+console.warn: services.settings: main/fingerprinting-protection-overrides sync interrupted by shutdown
+console.warn: services.settings: main/top-sites sync interrupted by shutdown
+console.warn: services.settings: security-state/cert-revocations sync interrupted by shutdown
+console.warn: services.settings: security-state/onecrl sync interrupted by shutdown
+console.warn: services.settings: security-state/intermediates sync interrupted by shutdown
+console.warn: services.settings: security-state/intermediates: Unable to retrieve remote-settings attachment bundle. {}

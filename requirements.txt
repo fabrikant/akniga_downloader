@@ -1,0 +1,11 @@
+pathvalidate
+selenium==4.11.2
+selenium_wire==5.1.0
+webdriver_manager==4.0.0
+requests
+beautifulsoup4
+pycryptodome
+blinker==1.7.0
+setuptools
+fake-useragent
+
