@@ -205,7 +205,9 @@ def get_book_requests(book_url):
 # могут содержать список воспроизведения - файл m3u8.
 # Но иногда (редко) список mp3 файлов.
 # Это второй случай
-def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
+def download_book_by_mp3_url(
+    mp3_url, book_folder, tmp_folder, book_json, tg_key, tg_chat
+):
     mp3_filename = mp3_url.split("/")[-1]
     url_pattern_path = "{0}/".format("/".join(mp3_url.split("/")[0:-1]))
     url_pattern_filename = "." + ".".join(mp3_filename.split(".")[1:])
@@ -235,9 +237,12 @@ def download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json):
                     shutil.copyfileobj(res.raw, f)
                 logger.warning(f"Файл загружен и сохранен как: {filename}")
             else:
-                logger.error(
-                    f"Получен код ошибки: {res.status_code} при загрузке с url: {url_string}"
+                msg = (
+                    f"Получен код ошибки: {res.status_code} при загрузке с url: {url_string}. "
+                    "Загрузка прервана."
                 )
+                logger.error(msg)
+                send_to_telegram(msg, tg_key, tg_chat)
                 exit(0)
         no_meta_filename = cut_the_chapter(chapter, filename, tmp_folder)
         create_mp3_with_metadata(
@@ -342,12 +347,14 @@ def create_metadata_file(book_folder, book_url):
 
 
 # Загрузка книги
-def download_book(book_url, output_folder):
+def download_book(book_url, output_folder, tg_key, tg_chat):
 
-    logger.warning(f"Начало загрузки книги с url: {book_url}")
+    msg = f"Начало загрузки книги с url: {book_url}"
+    logger.warning(msg)
+    send_to_telegram(msg, tg_key, tg_chat)
 
     book_requests, book_html = get_book_requests(book_url)
-    book_json, m3u8_url = analyse_book_requests(book_requests)
+    book_json, m3u8_url = analyse_book_requests(book_requests, tg_key, tg_chat)
     book_soup = BeautifulSoup(book_html, "html.parser")
     book_folder, tmp_folder = create_work_dirs(
         output_folder, book_json, book_soup, book_url
@@ -360,16 +367,20 @@ def download_book(book_url, output_folder):
         # try to parse html
         mp3_url = find_mp3_url(book_soup)
         if mp3_url is None:
-            logger.error(
-                "Не удалось обнаружить ни файл m3u8, ни файл mp3. Загрузка прервана"
-            )
+            msg = "Не удалось обнаружить ни файл m3u8, ни файл mp3. Загрузка прервана"
+            logger.error(msg)
+            send_to_telegram(msg, tg_key, tg_chat)
             exit(0)
         else:
-            download_book_by_mp3_url(mp3_url, book_folder, tmp_folder, book_json)
+            download_book_by_mp3_url(
+                mp3_url, book_folder, tmp_folder, book_json, tg_key, tg_chat
+            )
     else:  # it's ordinary case
         download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, tmp_folder, book_json)
 
-    logger.warning(f"Книга успешна загружена в каталог: {book_folder}")
+    msg = f"Книга успешна загружена в каталог: {book_folder}"
+    logger.warning(msg)
+    send_to_telegram(msg, tg_key, tg_chat)
 
     # Копируем обложку к основным файлам
     shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
@@ -381,7 +392,7 @@ def download_book(book_url, output_folder):
 
 
 # Обработка данных со страницы с книгой
-def analyse_book_requests(book_requests):
+def analyse_book_requests(book_requests, tg_key, tg_chat):
     try:
         # find request with book json data
         book_json_requests = [
@@ -409,12 +420,15 @@ def analyse_book_requests(book_requests):
         return book_json, m3u8url
     except AssertionError as message:
         logger.error(message)
+        send_to_telegram(message, tg_key, tg_chat)
         exit(0)
 
 
 # Обработка серии и последовательный запуск книг из серии
-def parse_series(series_url, output_folder):
-    logger.warning("Получение информации о серии")
+def parse_series(series_url, output_folder, tg_key, tg_chat):
+    msg = "Начата загрузка серии"
+    logger.warning(msg)
+    send_to_telegram(msg, tg_key, tg_chat)
     res = requests.get(series_url, headers=get_headers())
     if res.ok:
         series_soup = BeautifulSoup(res.text, "html.parser")
@@ -422,7 +436,7 @@ def parse_series(series_url, output_folder):
             "div", {"class": "content__main__articles"}
         ).findAll("a", {"class": "content__article-main-link tap-link"})
         for bs_link_soup in bs_links_soup:
-            download_book(bs_link_soup["href"], output_folder)
+            download_book(bs_link_soup["href"], output_folder, tg_key, tg_chat)
     else:
         logger.error(
             f"Получен код ошибки: {res.status_code} при загрузке с url: {series_url}"
@@ -451,6 +465,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     logger.warning(args)
     if "/series/" in args.url:
-        parse_series(args.url, args.output)
+        parse_series(args.url, args.output, args.telegram_api, args.telegram_chatid)
     else:
-        download_book(args.url, args.output)
+        download_book(args.url, args.output, args.telegram_api, args.telegram_chatid)
