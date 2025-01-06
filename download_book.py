@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 import subprocess
 import json
 import shutil
@@ -388,6 +389,10 @@ def download_book(book_url, output_folder, tg_key, tg_chat):
     create_metadata_file(book_folder, book_url)
     # Удаляем каталог временных файлов
     shutil.rmtree(tmp_folder, ignore_errors=True)
+    # Устанавливаем права на каталог. Всем полный доступ
+    if sys.platform != "win32":
+        subprocess.Popen(f"chmod -R ugo+wrX '{str(book_folder)}'", shell=True)
+
     return book_folder
 
 
