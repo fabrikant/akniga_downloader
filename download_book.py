@@ -363,6 +363,10 @@ def download_book(book_url, output_folder, tg_key, tg_chat):
 
     # download cover picture
     download_cover(book_json, book_soup, tmp_folder)
+    # Копируем обложку к основным файлам
+    shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
+    # Создание файла метаданных
+    create_metadata_file(book_folder, book_url)
 
     if m3u8_url is None:  # playlist not found.
         # try to parse html
@@ -383,10 +387,6 @@ def download_book(book_url, output_folder, tg_key, tg_chat):
     logger.warning(msg)
     send_to_telegram(msg, tg_key, tg_chat)
 
-    # Копируем обложку к основным файлам
-    shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
-    # Создание файла метаданных
-    create_metadata_file(book_folder, book_url)
     # Удаляем каталог временных файлов
     shutil.rmtree(tmp_folder, ignore_errors=True)
     # Устанавливаем права на каталог. Всем полный доступ
