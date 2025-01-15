@@ -450,11 +450,15 @@ def parse_series(series_url, output_folder, tg_key, tg_chat):
 
 # Точка входа в программу
 if __name__ == "__main__":
-    logging.basicConfig(
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        level=logging.WARNING,
-    )
+
     parser = argparse.ArgumentParser(description="Загрузчик книг с сайта akniga.org")
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        help="Уровень логирования по умолчанию error. -v: warning, -vv: info, -vvv: debug ",
+        action="count",
+        default=0,
+    )
     parser.add_argument(
         "--telegram-api",
         help="Наобязательный ключ API телеграм бота, который будет сообщать о процессе загрузки",
@@ -468,7 +472,20 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output", help="Путь к папке загрузки")
     parser.add_argument("--url", help="Адрес (url) страницы с книгой или серией книг")
     args = parser.parse_args()
+
+    log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    log_level = logging.ERROR
+    if args.verbose == 1:
+        log_level = logging.WARNING
+    elif args.verbose == 2:
+        log_level = logging.INFO
+    elif args.verbose > 2:
+        log_level = logging.DEBUG
+
+    logging.basicConfig(format=log_format, level=log_level)
+
     logger.warning(args)
+    
     if "/series/" in args.url:
         parse_series(args.url, args.output, args.telegram_api, args.telegram_chatid)
     else:

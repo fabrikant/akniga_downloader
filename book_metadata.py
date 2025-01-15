@@ -142,14 +142,14 @@ def get_book_info(book_url):
                 for link_soup in links_soup:
                     filter_name = link_soup.get_text()
                     # book_info["tags"].append(f"{type_of_filters} {filter_name}")
-                    book_info["tags"].append(filter_name)
+                    book_info["tags"].append(filter_name.lower())
         # Жанры
         sections_soup = book_soup.findAll("a", {"class": "section__title"})
         if sections_soup is not None:
             for section_soup in sections_soup:
                 # section_url = section_soup['href']
                 section_name = section_soup.get_text().replace("\n", "").strip()
-                book_info["genres"].append(section_name)
+                book_info["genres"].append(section_name.lower())
         logger.warning(f"Получены метаданные книги - {book_url}")
         return book_info
     else:
