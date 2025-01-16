@@ -2,6 +2,7 @@
 .venv
 opf.py
 tg_sender.py
+common_arguments.py
 book.json
 geckodriver.log
 __pycache__
