@@ -453,7 +453,10 @@ def parse_series(series_url, output_folder, tg_key, tg_chat):
 # Точка входа в программу
 if __name__ == "__main__":
 
-    logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.ERROR)
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=logging.ERROR,
+    )
     # Создаем общие аргументы для всех качалок
     parser = create_common_args(f"Загрузчик книг с сайта akniga.org")
     args = check_common_args(parser, logger)
