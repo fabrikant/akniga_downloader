@@ -19,7 +19,7 @@ from fake_useragent import UserAgent
 from book_metadata import get_book_info
 from tg_sender import send_to_telegram
 from opf import book_info_to_xml
-from common_arguments import create_common_args, check_common_args
+from common_arguments import create_common_args, parse_args
 
 logger = logging.getLogger(__name__)
 
@@ -349,7 +349,9 @@ def create_metadata_file(book_folder, book_url):
 
 
 # Загрузка книги
-def download_book(book_url, output_folder, tg_key, tg_chat):
+def download_book(
+    book_url, output_folder, tg_key, tg_chat, load_cover, create_metadata
+):
 
     msg = f"Начало загрузки книги с url: {book_url}"
     logger.warning(msg)
@@ -362,12 +364,15 @@ def download_book(book_url, output_folder, tg_key, tg_chat):
         output_folder, book_json, book_soup, book_url
     )
 
-    # download cover picture
+    # Загружаем обложку в любом случае, так как она понадобится для установки
+    # метаданных в mp3 файлы
     download_cover(book_json, book_soup, tmp_folder)
-    # Копируем обложку к основным файлам
-    shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
+    # При необходиомсти, копируем обложку к основным файлам
+    if load_cover:
+        shutil.copyfile(get_cover_filename(tmp_folder), get_cover_filename(book_folder))
     # Создание файла метаданных
-    create_metadata_file(book_folder, book_url)
+    if create_metadata:
+        create_metadata_file(book_folder, book_url)
 
     if m3u8_url is None:  # playlist not found.
         # try to parse html
@@ -431,7 +436,9 @@ def analyse_book_requests(book_requests, tg_key, tg_chat):
 
 
 # Обработка серии и последовательный запуск книг из серии
-def parse_series(series_url, output_folder, tg_key, tg_chat):
+def parse_series(
+    series_url, output_folder, tg_key, tg_chat, load_cover, create_metadata
+):
     msg = "Начата загрузка серии"
     logger.warning(msg)
     send_to_telegram(msg, tg_key, tg_chat)
@@ -442,7 +449,14 @@ def parse_series(series_url, output_folder, tg_key, tg_chat):
             "div", {"class": "content__main__articles"}
         ).findAll("a", {"class": "content__article-main-link tap-link"})
         for bs_link_soup in bs_links_soup:
-            download_book(bs_link_soup["href"], output_folder, tg_key, tg_chat)
+            download_book(
+                bs_link_soup["href"],
+                output_folder,
+                tg_key,
+                tg_chat,
+                load_cover,
+                create_metadata,
+            )
     else:
         logger.error(
             f"Получен код ошибки: {res.status_code} при загрузке с url: {series_url}"
@@ -458,10 +472,24 @@ if __name__ == "__main__":
     )
     # Создаем общие аргументы для всех качалок
     parser = create_common_args(f"Загрузчик книг с сайта akniga.org")
-    args = check_common_args(parser, logger)
+    args = parse_args(parser, logger)
     logger.info(args)
 
     if "/series/" in args.url:
-        parse_series(args.url, args.output, args.telegram_api, args.telegram_chatid)
+        parse_series(
+            args.url,
+            args.output,
+            args.telegram_api,
+            args.telegram_chatid,
+            args.cover,
+            args.metadata,
+        )
     else:
-        download_book(args.url, args.output, args.telegram_api, args.telegram_chatid)
+        download_book(
+            args.url,
+            args.output,
+            args.telegram_api,
+            args.telegram_chatid,
+            args.cover,
+            args.metadata,
+        )
