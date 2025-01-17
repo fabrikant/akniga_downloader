@@ -122,7 +122,6 @@ def get_book_info(book_url):
             book_info["publishedYear"] = convert_to_number(year)
 
         # Фильтры/Тэги
-        filers_url_prefix = f"{akniga_url}/label/"
         filters_soup = book_soup.find("article", {"itemtype": "http://schema.org/Book"})
         if not filters_soup is None:
             filters_soup = filters_soup.find(
