@@ -8,7 +8,6 @@ wget https://raw.githubusercontent.com/fabrikant/litres_audiobooks_downloader/ma
 wget https://raw.githubusercontent.com/fabrikant/litres_audiobooks_downloader/main/tg_sender.py
 wget https://raw.githubusercontent.com/fabrikant/litres_audiobooks_downloader/main/common_arguments.py
 
-./download_external_modules.sh
 python3 -m venv .venv
 source .venv/bin/activate
 python3 -m pip install --upgrade pip
