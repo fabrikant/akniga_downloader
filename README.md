@@ -26,7 +26,7 @@ git clone https://github.com/fabrikant/akniga_downloader.git
 ```cmd
 python -m venv venv
 venv\Scripts\activate
-pip install -r requirement.txt
+pip install -r requirements.txt
 deactivate
 ```
 Также необходимо открыть файл install.sh и скачать по ссылкам дополнительные модули (после команды wget).
