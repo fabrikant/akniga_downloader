@@ -63,7 +63,7 @@ def ffmpeg_common_command():
     return ["ffmpeg", "-y", "-hide_banner", "-loglevel", ffmpeg_log_level]
 
 
-# Отрезает от большого файла кусок со временем начала и оеончания
+# Отрезает от большого файла кусок со временем начала и о окончания
 # Делит большой файл на главы. Файл создается без метаданных,
 # так как ffmpeg не хочет делать это за один проход
 def cut_the_chapter(chapter, input_file, output_folder):
