@@ -1,4 +1,4 @@
-# akniga-parser
+# akniga_downloader
 Загружает файлы аудиокниг доступные по подписке с сайта [akniga](akniga.org).
 Скрипт может использоваться самостоятельно, но предназначен для работы с телеграм ботом [tg-combine](https://github.com/fabrikant/tg-combine)
 
