@@ -255,9 +255,11 @@ def get_book_info(book_url, tg_key, tg_chat):
         bs_tags = bs_tags.find_all("div")
         if not bs_tags is None:
             for bs_tag in bs_tags:
-                tag = bs_tag.get_text().replace("\n", "").strip().lower()
-                tag = " ".join(tag.split())
-                book_info["tags"].append(tag)
+                tag_name = bs_tag.contents[0].replace("\n", "").strip().lower()
+                for bs_tag_value in bs_tag.find_all("a"):
+                    tag_value = bs_tag_value.get_text().strip().lower()
+                    tag_value = " ".join(tag_value.split())
+                    book_info["tags"].append(f"{tag_name} {tag_value}")
 
     if bs_tags is None:
         logger.warning(f"Не найдены тэги {book_url}")
