@@ -76,7 +76,7 @@ def download_cover(book_info, tmp_folder):
 # После загрузки книги, нужно разделить файл на главы
 # и снабдить метаданными
 def post_processing(book_folder, book_info):
-    logger.info(f"Разбивка книги {book_info['title']} на главы")
+    logger.info(f"Разбивка на главы книги: {book_info['title']}")
     full_book_fname = str(full_book_filename(book_folder))
 
     cover_path = get_cover_filename(book_folder)
@@ -107,13 +107,11 @@ def post_processing(book_folder, book_info):
         start_time = int(chapter["start_time"])
         duration = None
         if next_idx < chapters_count:
-            # end_time = int(book_info["chapters"][next_idx]["start_time"]) - 1
             end_time = int(book_info["chapters"][next_idx]["start_time"])
             duration = end_time - start_time
 
         AudioSegment.from_file(
             full_book_fname,
-            # format="mp3",
             start_second=start_time,
             duration=duration,
         ).export(output_file, format="mp3", tags=tags, cover=cover_path)
