@@ -192,7 +192,10 @@ def get_book_info(book_url, tg_key, tg_chat):
     if server != "":
         m3u8_url = f"{server}b/{book_id}/pl.m3u8?res=2"
     else:
-        msg = f"На странице книги {book_url} не обнаружен тэг <link> c атрибутом rel='preconnect'"
+        msg = (
+            f"На странице книги {book_url} не обнаружен тэг <link> c атрибутом rel='preconnect'."
+            " Возможно книга недоступна для свободного прослушивания."
+        )
         send_to_telegram(msg, tg_key, tg_chat)
         logger.error(msg)
         exit(0)
