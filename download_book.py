@@ -76,7 +76,7 @@ def download_cover(book_info, tmp_folder):
 # После загрузки книги, нужно разделить файл на главы
 # и снабдить метаданными
 def post_processing(book_folder, book_info):
-    logger.debug(f"Разбивка книги {book_info['title']} на главы")
+    logger.info(f"Разбивка книги {book_info['title']} на главы")
     full_book_fname = str(full_book_filename(book_folder))
 
     cover_path = get_cover_filename(book_folder)
@@ -103,11 +103,12 @@ def post_processing(book_folder, book_info):
             "encoded_by": "",
         }
 
-        logger.debug(f"Начало обработки главы {next_idx} из {chapters_count}")
+        logger.info(f"Начало обработки главы {next_idx} из {chapters_count}")
         start_time = int(chapter["start_time"])
         duration = None
         if next_idx < chapters_count:
-            end_time = int(book_info["chapters"][next_idx]["start_time"]) - 1
+            # end_time = int(book_info["chapters"][next_idx]["start_time"]) - 1
+            end_time = int(book_info["chapters"][next_idx]["start_time"])
             duration = end_time - start_time
 
         AudioSegment.from_file(
@@ -117,21 +118,21 @@ def post_processing(book_folder, book_info):
             duration=duration,
         ).export(output_file, format="mp3", tags=tags, cover=cover_path)
 
-        logger.debug(f"Окончание обработки главы {next_idx} из {chapters_count}")
+        logger.info(f"Окончание обработки главы {next_idx} из {chapters_count}")
 
 
 # Загрузка книги по плэйлисту с помощью программы ffmpeg
 # на выходе получаем один большой файл в неизвестном
 # (необязательно mp3) формате
 def download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, book_info):
-    logger.debug(f"Начало загрузки книги по плейлисту: {m3u8_url}")
+    logger.info(f"Начало загрузки книги по плейлисту: {m3u8_url}")
     ffmpeg_command = ffmpeg_common_command() + [
         "-i",
         m3u8_url,
         full_book_filename(book_folder),
     ]
     subprocess.run(ffmpeg_command)
-    logger.debug(f"Окончание загрузки книги по плейлисту: {m3u8_url}")
+    logger.info(f"Окончание загрузки книги по плейлисту: {m3u8_url}")
     post_processing(book_folder, book_info)
 
 
