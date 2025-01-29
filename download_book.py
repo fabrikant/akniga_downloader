@@ -76,26 +76,21 @@ def download_cover(book_info, tmp_folder):
 # После загрузки книги, нужно разделить файл на главы
 # и снабдить метаданными
 def post_processing(book_folder, book_info):
-    book_audio = AudioSegment.from_file(full_book_filename(book_folder))
+    logger.debug(f"Разбивка книги {book_info['title']} на главы")
+    full_book_fname = str(full_book_filename(book_folder))
+
+    cover_path = get_cover_filename(book_folder)
+    if os.path.isfile(cover_path):
+        cover_path = str(cover_path)
+    else:
+        cover_path = None
+
     next_idx = 0
-    k = 1000
     chapters_count = len(book_info["chapters"])
     for chapter in book_info["chapters"]:
 
         next_idx += 1
-        start_time = int(chapter["start_time"]) * k
-        end_time = None
-
-        if next_idx < chapters_count:
-            end_time = (int(book_info["chapters"][next_idx]["start_time"]) - 1) * k
-
-        if end_time is None:
-            segment = book_audio[start_time:]
-        else:
-            segment = book_audio[start_time:end_time]
-
         output_file = book_folder / sanitize_filename(f'{chapter["title"]}.mp3')
-
         tags = {
             "title": chapter["title"],
             "album": book_info["title"],
@@ -108,20 +103,35 @@ def post_processing(book_folder, book_info):
             "encoded_by": "",
         }
 
-        cover_path = str(get_cover_filename(book_folder))
-        segment.export(output_file, format="mp3", tags=tags, cover=cover_path)
+        logger.debug(f"Начало обработки главы {next_idx} из {chapters_count}")
+        start_time = int(chapter["start_time"])
+        duration = None
+        if next_idx < chapters_count:
+            end_time = int(book_info["chapters"][next_idx]["start_time"]) - 1
+            duration = end_time - start_time
+
+        AudioSegment.from_file(
+            full_book_fname,
+            # format="mp3",
+            start_second=start_time,
+            duration=duration,
+        ).export(output_file, format="mp3", tags=tags, cover=cover_path)
+
+        logger.debug(f"Окончание обработки главы {next_idx} из {chapters_count}")
 
 
 # Загрузка книги по плэйлисту с помощью программы ffmpeg
 # на выходе получаем один большой файл в неизвестном
 # (необязательно mp3) формате
 def download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, book_info):
+    logger.debug(f"Начало загрузки книги по плейлисту: {m3u8_url}")
     ffmpeg_command = ffmpeg_common_command() + [
         "-i",
         m3u8_url,
         full_book_filename(book_folder),
     ]
     subprocess.run(ffmpeg_command)
+    logger.debug(f"Окончание загрузки книги по плейлисту: {m3u8_url}")
     post_processing(book_folder, book_info)
 
 
@@ -164,84 +174,108 @@ def get_book_info(book_url, tg_key, tg_chat):
         # "uuid": "",
     }
     res = requests.get(book_url, headers=get_headers())
-    if res.ok:
-        book_html = res.text
-        bs_book = BeautifulSoup(book_html, "html.parser")
+    if not res.ok:
+        msg = f"Ошибка {res.status_code} при загрузке страницы книги {book_url}."
+        send_to_telegram(msg, tg_key, tg_chat)
+        logger.error(msg)
+        exit(0)
 
-        m3u8_url = ""
-        server = ""
-        bs_server = bs_book.find("div", {"class": "preconnect"})
-        if not bs_server is None:
-            server = bs_server.find("link", {"rel": "preconnect"})["href"]
-        book_id = bs_book.find("article")["data-bid"]
+    book_html = res.text
+    bs_book = BeautifulSoup(book_html, "html.parser")
 
-        if server != "":
-            m3u8_url = f"{server}b/{book_id}/pl.m3u8?res=2"
+    m3u8_url = ""
+    server = ""
+    bs_server = bs_book.find("div", {"class": "preconnect"})
+    if not bs_server is None:
+        server = bs_server.find("link", {"rel": "preconnect"})["href"]
+    book_id = bs_book.find("article")["data-bid"]
 
-        book_info["id"] = book_id
-        book_info["title"] = (
-            bs_book.find("div", {"class": "book--header"})
-            .find("div", {"itemprop": "name"})
-            .get_text()
-        )
+    if server != "":
+        m3u8_url = f"{server}b/{book_id}/pl.m3u8?res=2"
+    else:
+        msg = f"На странице книги {book_url} не обнаружен тэг <link> c атрибутом rel='preconnect'"
+        send_to_telegram(msg, tg_key, tg_chat)
+        logger.error(msg)
+        exit(0)
 
-        description = bs_book.find("div", {"itemprop": "description"}).get_text()
-        description = description.replace("Описание", "").replace("<br>", "\n").strip()
-        book_info["description"] = description
+    # book_info["id"] = book_id
+    book_info["title"] = (
+        bs_book.find("div", {"class": "book--header"})
+        .find("div", {"itemprop": "name"})
+        .get_text()
+    )
 
-        bs_authors = bs_book.find_all("span", {"itemprop": "author"})
-        if not bs_authors is None:
-            for bs_author in bs_authors:
-                book_info["authors"].append(bs_author.get_text().strip())
-            book_info["author"] = book_info["authors"][0]
+    description = bs_book.find("div", {"itemprop": "description"}).get_text()
+    description = description.replace("Описание", "").replace("<br>", "\n").strip()
+    book_info["description"] = description
 
-        bs_narrators = bs_book.find_all("a", {"rel": "performer"})
-        if not bs_narrators is None:
-            for bs_narrator in bs_narrators:
-                book_info["narrators"].append(bs_narrator.get_text().strip())
-            book_info["narrator"] = book_info["narrators"][0]
+    bs_authors = bs_book.find_all("span", {"itemprop": "author"})
+    if not bs_authors is None:
+        for bs_author in bs_authors:
+            book_info["authors"].append(bs_author.get_text().strip())
+        book_info["author"] = book_info["authors"][0]
+    else:
+        logger.warning(f"Не найден автор {book_url}")
 
-        bs_series = bs_book.find("a", {"class": "link__series"})
-        if not bs_series is None:
-            series_list = bs_series.get_text().split("(")
-            book_info["series"] = series_list[0].strip()
-            if len(series_list) > 1:
-                book_info["series_num"] = series_list[1].replace(")", "").strip()
+    bs_narrators = bs_book.find_all("a", {"rel": "performer"})
+    if not bs_narrators is None:
+        for bs_narrator in bs_narrators:
+            book_info["narrators"].append(bs_narrator.get_text().strip())
+        book_info["narrator"] = book_info["narrators"][0]
+    else:
+        logger.warning(f"Не найден исполнитель {book_url}")
 
-        bs_cover = bs_book.find("div", {"class": "book--cover"})
+    bs_series = bs_book.find("a", {"class": "link__series"})
+    if not bs_series is None:
+        series_list = bs_series.get_text().split("(")
+        book_info["series"] = series_list[0].strip()
+        if len(series_list) > 1:
+            book_info["series_num"] = series_list[1].replace(")", "").strip()
+
+    bs_cover = bs_book.find("div", {"class": "book--cover"})
+    if not bs_cover is None:
+        bs_cover = bs_cover.find("img")
         if not bs_cover is None:
-            bs_cover = bs_cover.find("img")
-            if not bs_cover is None:
-                book_info["cover"] = bs_cover["src"]
+            book_info["cover"] = bs_cover["src"]
 
-        bs_genres = bs_book.find_all("a", {"class": "section__title"})
-        if not bs_genres is None:
-            for bs_genre in bs_genres:
-                book_info["genres"].append(bs_genre.get_text().strip().lower())
+    if bs_cover is None:
+        logger.warning(f"Не найдена обложка {book_url}")
 
-        bs_tags = bs_book.find("div", {"class": "classifiers__article-main"})
+    bs_genres = bs_book.find_all("a", {"class": "section__title"})
+    if not bs_genres is None:
+        for bs_genre in bs_genres:
+            book_info["genres"].append(bs_genre.get_text().strip().lower())
+
+    if bs_genres is None:
+        logger.warning(f"Не найдены жанры {book_url}")
+
+    bs_tags = bs_book.find("div", {"class": "classifiers__article-main"})
+    if not bs_tags is None:
+        bs_tags = bs_tags.find_all("div")
         if not bs_tags is None:
-            bs_tags = bs_tags.find_all("div")
-            if not bs_tags is None:
-                for bs_tag in bs_tags:
-                    tag = bs_tag.get_text().replace("\n", "").strip().lower()
-                    tag = " ".join(tag.split())
-                    book_info["tags"].append(tag)
+            for bs_tag in bs_tags:
+                tag = bs_tag.get_text().replace("\n", "").strip().lower()
+                tag = " ".join(tag.split())
+                book_info["tags"].append(tag)
 
-        bs_tmps = bs_book.find_all("div", {"class": "caption__article--about-block"})
-        if not bs_tmps is None:
-            for bs_tmp in bs_tmps:
-                year_str = bs_tmp.get_text().lower()
-                if "год" in year_str:
-                    year_str = year_str.replace("год", "").strip()
-                    book_info["publishedYear"] = year_str
+    if bs_tags is None:
+        logger.warning(f"Не найдены тэги {book_url}")
 
-        chapters = []
-        bs_chapters = bs_book.find(
-            "div", {"class": "player--chapters", "data-bid": book_id}
-        )
+    bs_tmps = bs_book.find_all("div", {"class": "caption__article--about-block"})
+    if not bs_tmps is None:
+        for bs_tmp in bs_tmps:
+            year_str = bs_tmp.get_text().lower()
+            if "год" in year_str:
+                year_str = year_str.replace("год", "").strip()
+                book_info["publishedYear"] = year_str
+
+    chapters = []
+    bs_chapters = bs_book.find(
+        "div", {"class": "player--chapters", "data-bid": book_id}
+    )
+    if not bs_chapters is None:
+        bs_chapters = bs_chapters.find_all("div", {"class": "chapter__default"})
         if not bs_chapters is None:
-            bs_chapters = bs_chapters.find_all("div", {"class": "chapter__default"})
             for bs_chapter in bs_chapters:
                 title = (
                     bs_chapter.find("div", {"class": "chapter__default--title"})
@@ -256,9 +290,15 @@ def get_book_info(book_url, tg_key, tg_chat):
                     }
                 )
 
-        book_info["chapters"] = chapters
+    if bs_chapters is None:
+        msg = f"Не найден список глав {book_url}"
+        send_to_telegram(msg, tg_key, tg_chat)
+        logger.error(msg)
+        exit(0)
 
-        return book_info, m3u8_url
+    book_info["chapters"] = chapters
+
+    return book_info, m3u8_url
 
 
 # Загрузка книги
