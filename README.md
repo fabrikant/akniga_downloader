@@ -5,12 +5,7 @@
 # Требования
 1. Операционная система **Linux** тестировалось на ubuntu 24.04. На **Windows** должно работать, но не тестировалось.
 1. [python3](https://www.python.org/) и venv. Чем новее, тем лучше. Тестировалось на 3.12.
-1. Браузер [firefox](https://www.mozilla.org/en-GB/firefox/)
-1. [ffmpeg](https://www.ffmpeg.org/)
-
->**ВАЖНО!!!** 
->
->1. **firefox** snap установленный в ubuntu по умолчанию не работает. Нужно его удалить и установить из deb пакета или tarball с [официального сайта](https://www.mozilla.org/en-US/firefox/)
+1. Установленный [ffmpeg](https://www.ffmpeg.org/)
 
 # Установка
 Скачиваем любым способом исходный код. Например:  

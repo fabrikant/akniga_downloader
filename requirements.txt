@@ -1,4 +1,5 @@
 pathvalidate
+pydub
 selenium==4.11.2
 selenium_wire==5.1.0
 webdriver_manager==4.0.0
