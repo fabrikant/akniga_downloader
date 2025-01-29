@@ -329,7 +329,9 @@ def download_book(
 
     download_book_by_m3u8_with_ffmpeg(m3u8_url, book_folder, book_info)
 
-    msg = f"Книга успешна загружена в каталог: {book_folder}"
+    msg = (
+        f"Окончание загрузки книги:\n{book_info['title']}\nавтор: {book_info['author']}"
+    )
     logger.warning(msg)
     send_to_telegram(msg, tg_key, tg_chat)
 
