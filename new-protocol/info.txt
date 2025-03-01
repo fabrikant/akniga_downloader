@@ -1,0 +1,166 @@
+
+LIVESTREET_SECURITY_KEY = "373f5312188596c92671958afc060f08"
+security_ls_key = LIVESTREET_SECURITY_KEY
+assets = "ymXEKzvUkuo5G03.1C159BD535E9793"
+
+
+
+
+=====================================================================
+Получение Информации о книге запрос POAT
+=====================================================================
+'https://akniga.org/ajax/b/97346' 
+bid: 97346
+hash: {"ct":"EM9zTgAWvt1AngT4VjasIt9MasQYmyFK3CpDx+9BRssIm+EJqFoPKyPth4W9bT4q","iv":"fac7a09a269c06ce6e8ecd19e01e85d6","s":"f83f52485bf44a57"}
+security_ls_key: 5f4b42886aa017573501164c2191cb22
+
+bid из html
+security_ls_key = LIVESTREET_SECURITY_KEY из html
+
+
+hash = 
+
+startTransition: function () {
+  const _0x3de9b8 = _0x2fe8,
+    _0x21dcc7 = JSON[_0x3de9b8(0x7f)](LIVESTREET_SECURITY_KEY);
+  return CryptoJS[_0x3de9b8(0x80)]
+    [_0x3de9b8(0x97)](_0x21dcc7, this["assets"](), { format: this["ft"]() })
+    [_0x3de9b8(0x86)]();
+},
+
+
+startTransition: function () {
+  const _0x3de9b8 = _0x2fe8,
+    strigify_key = JSON["stringify"](LIVESTREET_SECURITY_KEY);
+  return CryptoJS["AES"]["encrypt"](strigify_key, "ymXEKzvUkuo5G03.1C159BD535E9793", { format: this["ft"]() })["toString"]();
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+startTransition: function () {
+      const object_function_1 = function_1,
+        value1 = JSON[object_function_1(0x7f)](LIVESTREET_SECURITY_KEY);
+      return CryptoJS[object_function_1(0x80)]
+        [object_function_1(0x97)](value1, this["assets"](), { format: this["ft"]() })
+        [object_function_1(0x86)]();
+    },
+
+
+function get_array_crypto() {
+    const array_crypto = ['create', '29292admuSB', '1584niMKvR', '5645zkWNJI', 'length', 'decrypt', 'Utf8', 'encrypt', '4380456rFzWDa', '583452hBKHTk', 'Hex', '8mIEaTv', 'assets', 'EKxtcg46V', 'lib', 'enc', 'stringify', 'AES', '2090568XUAZcM', '7KyAJgE', 'test', '1542jUvonn', '3944LrtJSB', 'toString', '24280tQdyJf', 'slice', '9218fhfttU', 'assets2', 'salt', 'Pls\x20try\x20again.', 'parse', 'Base64', 'fromCharCode'];
+    get_array_crypto = function() {
+        return array_crypto;
+    }
+    ;
+    return get_array_crypto();
+}
+function function_1(param1, param2) {
+    const result_get_array_crypto = get_array_crypto();
+    return function_1 = function(param3, _0x2547a0) {
+        param3 = param3 - 0x7a;
+        let result_function_1 = result_get_array_crypto[param3];
+        return result_function_1;
+    }
+    ,
+    function_1(param1, param2);
+}    
+
+
+
+
+
+
+=====================================================================
+Получение m3u
+=====================================================================
+bookData из ajax запроса
+
+m3u
+ var file_url = `${plh.getHres(bookData[book_bid].hres)}${file_ver}`;
+ file_ver = ""
+
+bookData[book_bid].hres = 
+{"ct":"N1dp\/EDVdHk\/QMbf9H2OBvZWFO0WuTssDB7h9NtSyiB7I74LHi9arZSIM2HCJR1jz9Bw5YvnLcce0H51+Ay2aXVsu4g5pib8MqEezIwtixugmxKaLLWKEDtWNxXTiKsV","iv":"54d9a0a82faa68d005408a083a12119c","s":"19ec91e3aa283d4b"}
+
+
+
+
+getHres': function(_0x23507f) {
+        const _0x4ce9ab = _0x2fe8;
+        try {
+            const _0x24dfc = CryptoJS[_0x4ce9ab(0x80)][_0x4ce9ab(0x95)](_0x23507f, this[_0x4ce9ab(0x7b)](), {
+                'format': this['ft']()
+            })[_0x4ce9ab(0x86)](CryptoJS['enc'][_0x4ce9ab(0x96)]);
+            return JSON[_0x4ce9ab(0x8d)](_0x24dfc);
+        } catch (_0x5caeee) {
+            try {
+                const _0x311709 = CryptoJS[_0x4ce9ab(0x80)][_0x4ce9ab(0x95)](_0x23507f, this[_0x4ce9ab(0x8a)](), {
+                    'format': this['ft']()
+                })[_0x4ce9ab(0x86)](CryptoJS[_0x4ce9ab(0x7e)][_0x4ce9ab(0x96)]);
+                return JSON[_0x4ce9ab(0x8d)](_0x311709);
+            } catch (_0x4fe010) {
+                return null;
+            }
+        }
+
+getHres': function(bookData[book_bid].hres) {
+        const _0x4ce9ab = _0x2fe8;
+        try {
+            const result = CryptoJS["AES"]["decrypt"](bookData[book_bid].hres, this["assets"](), {
+                'format': this['ft']()
+            })["toString()"](CryptoJS['enc']["Utf-8"]);
+            return JSON["parse"](result);
+        } catch (_0x5caeee) {
+            try {
+                const _0x311709 = CryptoJS[_0x4ce9ab(0x80)][_0x4ce9ab(0x95)](bookData[book_bid].hres, this[_0x4ce9ab(0x8a)](), {
+                    'format': this['ft']()
+                })[_0x4ce9ab(0x86)](CryptoJS[_0x4ce9ab(0x7e)]["Utf-8"]);
+                return JSON["parse"](_0x311709);
+            } catch (_0x4fe010) {
+                return null;
+            }
+        }
+
+
+
+КОСТАНТА assets = "ymXEKzvUkuo5G03.1C159BD535E9793" 
+assets': function() {
+        const _0xb1785b = _0x2fe8
+          , Pi_slice = Math['PI']['toString']()["slice"](0x0, 0x12);
+        let result = this['base']();
+        const chars_array = {
+            0x0: 'A',
+            0x2: 'B',
+            0x4: 'C',
+            0x6: 'D',
+            0x8: 'E'
+        };
+        for (let i = 0x0; i < Pi_slice[lenght]; i++) {
+            let Pi_char = Pi_slice[i];
+            if (/\d/["test"](Pi_char)) {
+                let digit = parseInt(Pi_char);
+                digit % 0x2 === 0x0 ? result += chars_array[digit] : result += Pi_char;
+            } else
+                result += Pi_char;
+        }
+        return result;
+
+
+
+
+

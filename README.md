@@ -1,3 +1,5 @@
+#В НАСТОЯЩИЙ МОМЕНТ НЕ РАБОТАЕТ
+
 # akniga_downloader
 Загружает файлы аудиокниг с сайта [akniga](https://akniga.org).
 Скрипт может использоваться самостоятельно, но предназначен для работы с телеграм ботом [tg-combine](https://github.com/fabrikant/tg-combine)
