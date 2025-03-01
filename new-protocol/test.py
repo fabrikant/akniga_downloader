@@ -36,6 +36,7 @@ def get_bid_and_key(url):
         bid = content.split("data-bid")[1].split("=")[1].split('"')[1]
         # cookies = {"PHPSESSID": "as2njthf17ji2r8rhevsepjt99"}
         phpsessid = resp.cookies["PHPSESSID"]
+
         return bid, security_ls_key, phpsessid
 
 
@@ -65,24 +66,25 @@ def get_bid_and_key(url):
 def get_book_ajax(bid, phpsessid, url):
 
     # cookies = {"PHPSESSID": phpsessid}
-    cookies = {"PHPSESSID": "as2njthf17ji2r8rhevsepjt99"}
-    
+    cookies = {"PHPSESSID": str(phpsessid), "a_ismobile": "0"}
+    # cookies = {"PHPSESSID": "as2njthf17ji2r8rhevsepjt99"}
+
     headers = {
-        # "accept": "application/json, text/javascript, */*; q=0.01",
-        # "accept-language": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7",
-        # "cache-control": "no-cache",
-        # "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-        # "dnt": "1",
+        "accept": "application/json, text/javascript, */*; q=0.01",
+        "accept-language": "en-US,en;q=0.9,ru-RU;q=0.8,ru;q=0.7",
+        "cache-control": "no-cache",
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "dnt": "1",
         "origin": "https://akniga.org",
-        # "pragma": "no-cache",
-        # "priority": "u=1, i",
-        # "referer": url,
-        # "sec-ch-ua": '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"',
-        # "sec-ch-ua-mobile": "?0",
-        # "sec-ch-ua-platform": '"Linux"',
-        # "sec-fetch-dest": "empty",
-        # "sec-fetch-mode": "cors",
-        # "sec-fetch-site": "same-origin",
+        "pragma": "no-cache",
+        "priority": "u=1, i",
+        "referer": url,
+        "sec-ch-ua": '"Not(A:Brand";v="99", "Google Chrome";v="133", "Chromium";v="133"',
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": '"Linux"',
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
         "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
         # "x-requested-with": "XMLHttpRequest",
         # 'cookie': '__ddg1_=DKwhVnuVtTvgXGB61LRN; PHPSESSID=as2njthf17ji2r8rhevsepjt99; a_ismobile=0; a_skin=acl; a_is_auth=1; _ga=GA1.1.772476125.1740810676; _ym_uid=1740810676126575635; _ym_isad=1; _ga_77BK1YJVXT=GS1.1.1740810675.1.0.1740810691.0.0.0; __ddg9_=217.25.223.209; _ym_d=1740839776; __ddg10_=1740839777; __ddg8_=maKJaoGqbnlCaZ7r',
