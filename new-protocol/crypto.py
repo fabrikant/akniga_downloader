@@ -55,13 +55,14 @@ def get_akniga_encrypt_dict(password, message):
 if __name__ == "__main__":
     pass
 
-    # hres = {
-    #     "ct": "Ry18xl7z3QmCMcWRl8ySQ/CfETay0D92vOMzpeJR2q8MhP+BV5Pq2M9MrYSdTN0KiqsO35GrSoZQ4Zs9QQ1LmovheNMZwRZsKNMPUw3yYdLVrYM2INU9gZhMeF1B3KCO",
-    #     "iv": "8441a7b2e15d055e43fe8a4a894719c8",
-    #     "s": "9e4ad8ae010d7b96",
-    # }
+    # import json
+    # result = '"https:\\/\\/r1.akniga.club\\/b\\/97346\\/pl.m3u8?res=x_LT5i_W8X1I4id2-CyrjQ&expires=1741017900"'
+    # hres = '{"ct":"aMwqLPcu2\\/aYO4P434C9wXaVgZg57syDM+0x62dn8SWLrcuIHosNuW2MG9n9cVeqYMPYmvEF+o0KOBANUC52tmzpMjoykuzVqp75xp1xCsradouu5NW+Ux8jBwUcZaw0","iv":"3db33d93d59c57f0c13626f026bb94da","s":"695c14ad60721524"}'
+    # json_hres = json.loads(hres)
+    # secret_key = "EKxtcg46V"
+    # # secret_key = "ymXEKzvUkuo5G03.1C159BD535E9793"
+    # print(decrypt(secret_key, json_hres["s"], json_hres["ct"]))
 
-    # print(decrypt("ymXEKzvUkuo5G03.1C159BD535E9793", hres["s"], hres["ct"]))
 
 # secret_text = "2e7b9e88a153fe407809c78d27a0e6d0"
 # exmple_password = "ymXEKzvUkuo5G03.1C159BD535E9793"
@@ -74,12 +75,12 @@ if __name__ == "__main__":
 # print(get_akniga_encrypt_dict("ymXEKzvUkuo5G03.1C159BD535E9793", "2e7b9e88a153fe407809c78d27a0e6d0"))
 # exit()
 
-# f_salt = "959ba8e70ec66bc8"
-# secret_key = "ymXEKzvUkuo5G03.1C159BD535E9793"
-# plain_text = "2e7b9e88a153fe407809c78d27a0e6d0"
+f_salt = "959ba8e70ec66bc8"
+secret_key = "ymXEKzvUkuo5G03.1C159BD535E9793"
+plain_text = "2e7b9e88a153fe407809c78d27a0e6d0"
 
-# cipherText, iv_string = encrypt(secret_key, f_salt, plain_text)
-# print("CipherText: " + cipherText)
+cipherText, iv_string = encrypt(secret_key, f_salt, plain_text)
+print("CipherText: " + cipherText)
 
-# decryptedMessage = decrypt(secret_key, f_salt, cipherText)
-# print("DecryptedMessage: " + decryptedMessage)
+decryptedMessage = decrypt(secret_key, f_salt, cipherText)
+print("DecryptedMessage: " + decryptedMessage)
