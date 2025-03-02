@@ -55,23 +55,31 @@ def get_akniga_encrypt_dict(password, message):
 if __name__ == "__main__":
     pass
 
-    # secret_text = "2e7b9e88a153fe407809c78d27a0e6d0"
-    # exmple_password = "ymXEKzvUkuo5G03.1C159BD535E9793"
-    # example_dict = {
-    #     "ct": "I9Y0FYwiL/le3qd5NAUFFTLZBQmcLnBstd55WnDfdC8vznlRNrIaJgABJ/wxc32C",
-    #     "iv": "571529020e50abaff3cd66f5ed50bcbe",
-    #     "s": "959ba8e70ec66bc8",
+    # hres = {
+    #     "ct": "Ry18xl7z3QmCMcWRl8ySQ/CfETay0D92vOMzpeJR2q8MhP+BV5Pq2M9MrYSdTN0KiqsO35GrSoZQ4Zs9QQ1LmovheNMZwRZsKNMPUw3yYdLVrYM2INU9gZhMeF1B3KCO",
+    #     "iv": "8441a7b2e15d055e43fe8a4a894719c8",
+    #     "s": "9e4ad8ae010d7b96",
     # }
 
-    # print(get_akniga_encrypt_dict("ymXEKzvUkuo5G03.1C159BD535E9793", "2e7b9e88a153fe407809c78d27a0e6d0"))
-    # exit()
+    # print(decrypt("ymXEKzvUkuo5G03.1C159BD535E9793", hres["s"], hres["ct"]))
 
-    # f_salt = "959ba8e70ec66bc8"
-    # secret_key = "ymXEKzvUkuo5G03.1C159BD535E9793"
-    # plain_text = "2e7b9e88a153fe407809c78d27a0e6d0"
+# secret_text = "2e7b9e88a153fe407809c78d27a0e6d0"
+# exmple_password = "ymXEKzvUkuo5G03.1C159BD535E9793"
+# example_dict = {
+#     "ct": "I9Y0FYwiL/le3qd5NAUFFTLZBQmcLnBstd55WnDfdC8vznlRNrIaJgABJ/wxc32C",
+#     "iv": "571529020e50abaff3cd66f5ed50bcbe",
+#     "s": "959ba8e70ec66bc8",
+# }
 
-    # cipherText, iv_string = encrypt(secret_key, f_salt, plain_text)
-    # print("CipherText: " + cipherText)
+# print(get_akniga_encrypt_dict("ymXEKzvUkuo5G03.1C159BD535E9793", "2e7b9e88a153fe407809c78d27a0e6d0"))
+# exit()
 
-    # decryptedMessage = decrypt(secret_key, f_salt, cipherText)
-    # print("DecryptedMessage: " + decryptedMessage)
+# f_salt = "959ba8e70ec66bc8"
+# secret_key = "ymXEKzvUkuo5G03.1C159BD535E9793"
+# plain_text = "2e7b9e88a153fe407809c78d27a0e6d0"
+
+# cipherText, iv_string = encrypt(secret_key, f_salt, plain_text)
+# print("CipherText: " + cipherText)
+
+# decryptedMessage = decrypt(secret_key, f_salt, cipherText)
+# print("DecryptedMessage: " + decryptedMessage)

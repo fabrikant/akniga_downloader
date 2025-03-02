@@ -2,33 +2,22 @@ import requests
 from fake_useragent import UserAgent
 from Crypto.Cipher import AES
 from base64 import b64encode
-from crypto import get_akniga_encrypt_dict
+from crypto import get_akniga_encrypt_dict, decrypt
+import json
 
 # from Crypto.Random import get_random_bytes
 
-
-def get_headers(cookies=None):
-    ua = UserAgent()
-    headers = {
-        "User-Agent": ua.firefox,
-    }
-    if not cookies is None:
-        headers["cookie"] = cookies
-    return headers
-
-
-def get_session():
-    ua = UserAgent()
-    session = requests.session()
-    session.headers.update({"User-Agent": ua.firefox})
-    return session
+ASSETS = "ymXEKzvUkuo5G03.1C159BD535E9793"
+USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0"
+AKNIGA_URL = "https://akniga.org"
 
 
 def get_m3u_url(book_url):
-    assets = "ymXEKzvUkuo5G03.1C159BD535E9793"
-    session = get_session()
 
-    resp = session.get(book_url, headers=get_headers())
+    session = requests.session()
+    session.headers.update({"User-Agent": USER_AGENT})
+
+    resp = session.get(book_url)
     if not resp.ok:
         return None
 
@@ -43,36 +32,35 @@ def get_m3u_url(book_url):
     bid = content.split("data-bid")[1].split("=")[1].split('"')[1]
     phpsessid = resp.cookies["PHPSESSID"]
 
-    enc_dict = get_akniga_encrypt_dict(assets, security_ls_key)
     data = {
         "bid": bid,
-        "hash": enc_dict,
+        "hash": get_akniga_encrypt_dict(ASSETS, security_ls_key),
         "security_ls_key": security_ls_key,
     }
 
     session.headers.update(
         {
-            # "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0",
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "X-Requested-With": "XMLHttpRequest",
-            "Origin": "https://akniga.org",
-            "DNT": "1",
-            "Sec-GPC": "1",
-            "Connection": "keep-alive",
-            "Referer": book_url,
-            # "Sec-Fetch-Dest": "empty",
-            # "Sec-Fetch-Mode": "cors",
-            # "Sec-Fetch-Site": "same-origin",
-            # "Pragma": "no-cache",
-            # "Cache-Control": "no-cache",
+            "User-Agent": USER_AGENT,
+            "Origin": AKNIGA_URL,
         }
     )
-    cookies ={"PHPSESSID": "4bocdrparpekuq6fc21sd9el24"}
-    resp = session.post(f"https://akniga.org/ajax/b/{bid}", data=data, cookies=cookies)
-    print(resp.status_code)
-    print(resp.content)
+
+    # cookies = {"PHPSESSID": phpsessid+"1"}
+    # resp = session.post(f"{AKNIGA_URL}/ajax/b/{bid}", data=data, cookies=cookies)
+    resp = session.post(f"{AKNIGA_URL}/ajax/b/{bid}", data=data)
+
+    # print(resp.status_code)
+    if not resp.ok:
+        return None
+
+    # print(resp.content)
+    json_data = json.loads(resp.text)
+    hres = json.loads(json_data["hres"])
+    srv = json_data["srv"]
+
+    print(hres)
+    decrypt_path = decrypt(security_ls_key, hres["s"], hres["ct"])
+    pass
 
 
 # #"2e7b9e88a153fe407809c78d27a0e6d0"
