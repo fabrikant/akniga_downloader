@@ -2,13 +2,16 @@ import requests
 from fake_useragent import UserAgent
 from Crypto.Cipher import AES
 from base64 import b64encode
+from crypto import get_akniga_encrypt_dict
 
 # from Crypto.Random import get_random_bytes
 
 
 def get_headers(cookies=None):
     ua = UserAgent()
-    headers = {"User-Agent": ua.firefox}
+    headers = {
+        "User-Agent": ua.firefox,
+    }
     if not cookies is None:
         headers["cookie"] = cookies
     return headers
@@ -21,23 +24,55 @@ def get_session():
     return session
 
 
-def get_bid_and_key(url):
+def get_m3u_url(book_url):
+    assets = "ymXEKzvUkuo5G03.1C159BD535E9793"
+    session = get_session()
 
-    resp = requests.get(url, headers=get_headers())
-    if resp.ok:
-        content = resp.text
-        security_ls_key = (
-            content.split("LIVESTREET_SECURITY_KEY")[1]
-            .split("=")[1]
-            .split(",")[0]
-            .replace("'", "")
-            .strip()
-        )
-        bid = content.split("data-bid")[1].split("=")[1].split('"')[1]
-        # cookies = {"PHPSESSID": "as2njthf17ji2r8rhevsepjt99"}
-        phpsessid = resp.cookies["PHPSESSID"]
+    resp = session.get(book_url, headers=get_headers())
+    if not resp.ok:
+        return None
 
-        return bid, security_ls_key, phpsessid
+    content = resp.text
+    security_ls_key = (
+        content.split("LIVESTREET_SECURITY_KEY")[1]
+        .split("=")[1]
+        .split(",")[0]
+        .replace("'", "")
+        .strip()
+    )
+    bid = content.split("data-bid")[1].split("=")[1].split('"')[1]
+    phpsessid = resp.cookies["PHPSESSID"]
+
+    enc_dict = get_akniga_encrypt_dict(assets, security_ls_key)
+    data = {
+        "bid": bid,
+        "hash": enc_dict,
+        "security_ls_key": security_ls_key,
+    }
+
+    session.headers.update(
+        {
+            # "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:135.0) Gecko/20100101 Firefox/135.0",
+            "Accept": "application/json, text/javascript, */*; q=0.01",
+            "Accept-Language": "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+            "Origin": "https://akniga.org",
+            "DNT": "1",
+            "Sec-GPC": "1",
+            "Connection": "keep-alive",
+            "Referer": book_url,
+            # "Sec-Fetch-Dest": "empty",
+            # "Sec-Fetch-Mode": "cors",
+            # "Sec-Fetch-Site": "same-origin",
+            # "Pragma": "no-cache",
+            # "Cache-Control": "no-cache",
+        }
+    )
+    cookies ={"PHPSESSID": "4bocdrparpekuq6fc21sd9el24"}
+    resp = session.post(f"https://akniga.org/ajax/b/{bid}", data=data, cookies=cookies)
+    print(resp.status_code)
+    print(resp.content)
 
 
 # #"2e7b9e88a153fe407809c78d27a0e6d0"
@@ -107,10 +142,9 @@ def get_book_ajax(bid, phpsessid, url):
 
 if __name__ == "__main__":
 
-    # get_hash("2e7b9e88a153fe407809c78d27a0e6d0")
-
-    # session = get_session()
     book_url = "https://akniga.org/glubina-pogruzhenie-62-e"
-    bid, security_ls_key, phpsessid = get_bid_and_key(book_url)
-    print(bid)
-    get_book_ajax(bid, phpsessid, book_url)
+    get_m3u_url(book_url)
+    # session = get_session()
+    # bid, security_ls_key, phpsessid = get_bid_and_key(session, book_url)
+    # print(bid)
+    # get_book_ajax(bid, phpsessid, book_url)
