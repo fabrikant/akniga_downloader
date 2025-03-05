@@ -9,5 +9,3 @@ selenium_wire
 webdriver_manager
 blinker==1.7.0
 setuptools
-
-pycryptodome
